@@ -28,11 +28,16 @@ export const useBookingStore = create<BookingState>((set) => ({
   bookedTimeIds: [],
   setField: (key, value) => set({ [key]: value }),
   confirmBooking: (booking) =>
-    set((state) => ({
-      confirmedBooking: booking,
-      time: undefined,
-      bookedTimeIds: state.bookedTimeIds.includes(booking.time) ? state.bookedTimeIds : [...state.bookedTimeIds, booking.time],
-    })),
+    set((state) => {
+      const previousTime = state.confirmedBooking?.time;
+      const bookedTimeIds = state.bookedTimeIds.filter((timeId) => timeId !== previousTime);
+
+      return {
+        confirmedBooking: booking,
+        time: undefined,
+        bookedTimeIds: bookedTimeIds.includes(booking.time) ? bookedTimeIds : [...bookedTimeIds, booking.time],
+      };
+    }),
   reset: () =>
     set({
       shopId: undefined,

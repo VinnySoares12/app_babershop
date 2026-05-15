@@ -17,3 +17,18 @@ export const supabase = createClient<Database>(
     },
   },
 );
+
+if (isSupabaseConfigured) {
+  console.log("Supabase URL:", supabaseUrl);
+
+  supabase.auth.getSession().then(({ error }) => {
+    if (error) {
+      console.error("Erro na conexão com o Supabase:", error.message);
+      return;
+    }
+
+    console.log("Conexão com o Supabase funcionando.");
+  });
+} else {
+  console.warn("Supabase não configurado. Verifique VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY no .env.");
+}

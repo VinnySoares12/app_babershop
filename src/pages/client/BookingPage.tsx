@@ -12,11 +12,14 @@ import { useBookingStore } from "@/stores/booking-store";
 
 export function BookingPage() {
   const navigate = useNavigate();
-  const { barberId, serviceId, date, time, setField, confirmBooking } = useBookingStore();
+  const { barberId, serviceId, date, time, bookedTimeIds, setField, confirmBooking } = useBookingStore();
   const selectedService = services.find((service) => service.id === serviceId) ?? services[2];
   const canContinue = Boolean(barberId && serviceId && time);
   const couponCents = selectedService.priceCents >= 10000 ? 1000 : 0;
   const cashbackCents = selectedService.priceCents >= 9000 ? 500 : 0;
+  const availableTimeSlots = timeSlots.map((slot) =>
+    bookedTimeIds.includes(slot.id) ? { ...slot, status: "busy" as const } : slot,
+  );
 
   function handleConfirm() {
     if (!barberId || !serviceId || !time) return;
@@ -81,7 +84,7 @@ export function BookingPage() {
           <h2 className="text-lg font-bold">Hoje</h2>
         </div>
         <TimeSlotGrid
-          slots={timeSlots}
+          slots={availableTimeSlots}
           selectedSlotId={time}
           onSelect={(slot) => {
             setField("date", "Hoje");

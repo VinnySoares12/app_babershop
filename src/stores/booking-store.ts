@@ -17,14 +17,29 @@ type BookingState = {
   time?: string;
   paymentMethod: PaymentMethod;
   confirmedBooking?: ConfirmedBooking;
-  setField: <K extends keyof Omit<BookingState, "setField" | "reset">>(key: K, value: BookingState[K]) => void;
+  bookedTimeIds: string[];
+  setField: <K extends keyof Omit<BookingState, "setField" | "confirmBooking" | "reset">>(key: K, value: BookingState[K]) => void;
   confirmBooking: (booking: ConfirmedBooking) => void;
   reset: () => void;
 };
 
 export const useBookingStore = create<BookingState>((set) => ({
   paymentMethod: "pix",
+  bookedTimeIds: [],
   setField: (key, value) => set({ [key]: value }),
-  confirmBooking: (booking) => set({ confirmedBooking: booking }),
-  reset: () => set({ shopId: undefined, barberId: undefined, serviceId: undefined, date: undefined, time: undefined, paymentMethod: "pix" }),
+  confirmBooking: (booking) =>
+    set((state) => ({
+      confirmedBooking: booking,
+      time: undefined,
+      bookedTimeIds: state.bookedTimeIds.includes(booking.time) ? state.bookedTimeIds : [...state.bookedTimeIds, booking.time],
+    })),
+  reset: () =>
+    set({
+      shopId: undefined,
+      barberId: undefined,
+      serviceId: undefined,
+      date: undefined,
+      time: undefined,
+      paymentMethod: "pix",
+    }),
 }));

@@ -37,7 +37,6 @@ export function ServiceTile({ service, selected, onSelect }: ServiceTileProps) {
       </div>
       <div className="min-w-0 flex-1">
         <h3 className="font-semibold">{service.name}</h3>
-        <p className="mt-1 text-sm text-muted">{service.durationMinutes} min</p>
       </div>
       <strong className="text-sm text-gold">{formatCurrency(service.priceCents)}</strong>
     </Card>

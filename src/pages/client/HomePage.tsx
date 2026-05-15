@@ -6,16 +6,32 @@ import { PlanCard } from "@/components/cards/PlanCard";
 import { ServiceTile } from "@/components/booking/ServiceTile";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { useSession } from "@/hooks/use-session";
 import { appRoutes } from "@/lib/routes";
 import { barbers, nextAppointment, plans, services } from "@/lib/mock-data";
 import { useBookingStore } from "@/stores/booking-store";
 import { usePlanStore } from "@/stores/plan-store";
 
+function getGreeting() {
+  const hour = new Date().getHours();
+
+  if (hour < 12) return "Bom dia";
+  if (hour < 18) return "Boa tarde";
+  return "Boa noite";
+}
+
+function getFirstName(fullName?: string) {
+  return fullName?.trim().split(/\s+/)[0] || "Cliente";
+}
+
 export function HomePage() {
+  const { data: session } = useSession();
   const confirmedBooking = useBookingStore((state) => state.confirmedBooking);
   const { selectedPlanId, setSelectedPlanId } = usePlanStore();
   const confirmedBarber = barbers.find((barber) => barber.id === confirmedBooking?.barberId);
   const confirmedService = services.find((service) => service.id === confirmedBooking?.serviceId);
+  const customerName = getFirstName(session?.user.user_metadata.full_name);
+  const greeting = getGreeting();
   const appointment = confirmedBooking && confirmedBarber && confirmedService
     ? {
         id: "simulated_booking",
@@ -33,7 +49,7 @@ export function HomePage() {
       <header className="flex items-center justify-between gap-4">
         <div>
           <p className="text-sm font-medium text-gold">Saviella The Barber</p>
-          <h1 className="mt-2 text-3xl font-bold tracking-normal sm:text-4xl">Boa noite, Vinicius</h1>
+          <h1 className="mt-2 text-3xl font-bold tracking-normal sm:text-4xl">{greeting}, {customerName}</h1>
           <p className="mt-2 text-sm text-muted">Seu visual premium em poucos toques.</p>
         </div>
         <div className="h-12 w-12 rounded-2xl bg-[url('https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80')] bg-cover ring-1 ring-gold/30" />

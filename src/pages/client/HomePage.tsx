@@ -52,7 +52,11 @@ export function HomePage() {
           <h1 className="mt-2 text-3xl font-bold tracking-normal sm:text-4xl">{greeting}, {customerName}</h1>
           <p className="mt-2 text-sm text-muted">Seu visual premium em poucos toques.</p>
         </div>
-        <div className="h-12 w-12 rounded-2xl bg-[url('https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80')] bg-cover ring-1 ring-gold/30" />
+        <img
+          src="/assets/saviella-logo.png"
+          alt="Saviella The Barber"
+          className="h-12 w-12 rounded-full object-cover ring-1 ring-gold/30"
+        />
       </header>
 
       <NextAppointmentCard appointment={appointment} />

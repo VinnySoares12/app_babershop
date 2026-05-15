@@ -37,9 +37,10 @@ export type TimeSlot = {
 
 export type Plan = {
   id: string;
-  name: "Gold" | "Premium" | "VIP";
+  name: "Basic" | "Gold" | "Premium";
   priceCents: number;
   cutsPerMonth: number;
+  description: string;
   benefits: string[];
   highlighted?: boolean;
 };

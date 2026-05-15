@@ -35,11 +35,10 @@ export function PlanCard({ plan, selected, onSelect }: PlanCardProps) {
             <Crown className="h-5 w-5 text-gold" />
             <h3 className="font-semibold">Plano {plan.name}</h3>
           </div>
-          <p className="mt-2 text-2xl font-bold">{formatCurrency(plan.priceCents)}<span className="text-sm font-medium text-muted">/mes</span></p>
+          <p className="mt-2 text-2xl font-bold">{formatCurrency(plan.priceCents)}<span className="text-sm font-medium text-muted">/mês</span></p>
         </div>
         {selected ? <Badge tone="gold">Selecionado</Badge> : plan.highlighted ? <Badge tone="gold">Mais escolhido</Badge> : null}
       </div>
-      <p className="mt-3 text-sm text-muted">{plan.cutsPerMonth} cortes por mes inclusos.</p>
       <ul className="mt-4 space-y-2">
         {plan.benefits.map((benefit) => (
           <li key={benefit} className="flex items-center gap-2 text-sm text-foreground/88">

@@ -64,25 +64,28 @@ export const timeSlots: TimeSlot[] = [
 
 export const plans: Plan[] = [
   {
+    id: "plan_basic",
+    name: "Basic",
+    priceCents: 4500,
+    cutsPerMonth: 1,
+    description: "Corte Avulso",
+    benefits: ["Corte Avulso"],
+  },
+  {
     id: "plan_gold",
     name: "Gold",
-    priceCents: 14990,
-    cutsPerMonth: 2,
-    benefits: ["2 cortes por mes", "Prioridade na agenda", "5% de cashback"],
+    priceCents: 13000,
+    cutsPerMonth: 4,
+    description: "Cabelo + Sobrancelha",
+    benefits: ["4 cortes por mês", "Cabelo + Sobrancelha"],
   },
   {
     id: "plan_premium",
     name: "Premium",
-    priceCents: 22990,
+    priceCents: 15000,
     cutsPerMonth: 4,
-    benefits: ["4 cortes por mes", "10% de cashback", "Cupons exclusivos"],
+    description: "Cabelo + Bigode + Barba",
+    benefits: ["4 cortes por mês", "Cabelo + Bigode + Barba"],
     highlighted: true,
-  },
-  {
-    id: "plan_vip",
-    name: "VIP",
-    priceCents: 34990,
-    cutsPerMonth: 8,
-    benefits: ["Agenda prioritaria", "15% de cashback", "Atendimento VIP"],
   },
 ];

@@ -62,11 +62,11 @@ export function HomePage() {
 
       <section>
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-lg font-bold">Serviços rápidos</h2>
+          <h2 className="text-lg font-bold">Serviços</h2>
           <Link to={appRoutes.booking} className="text-sm font-semibold text-gold">Ver todos</Link>
         </div>
         <div className="grid gap-3 sm:grid-cols-2">
-          {services.slice(0, 4).map((service, index) => (
+          {services.slice(0, 6).map((service, index) => (
             <motion.div key={service.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.04 }}>
               <ServiceTile service={service} />
             </motion.div>

@@ -30,10 +30,12 @@ export const barbers: Barber[] = [
 ];
 
 export const services: Service[] = [
-  { id: "srv_cut", name: "Corte", durationMinutes: 45, priceCents: 7000, iconName: "scissors" },
-  { id: "srv_beard", name: "Barba", durationMinutes: 30, priceCents: 5000, iconName: "beard" },
-  { id: "srv_combo", name: "Corte + Barba", durationMinutes: 75, priceCents: 11000, iconName: "sparkles" },
-  { id: "srv_color", name: "Pigmentacao", durationMinutes: 45, priceCents: 9000, iconName: "palette" },
+  { id: "srv_beard", name: "Barba", durationMinutes: 30, priceCents: 2000, iconName: "beard" },
+  { id: "srv_cut", name: "Corte", durationMinutes: 45, priceCents: 4000, iconName: "scissors" },
+  { id: "srv_combo", name: "Corte + Barba", durationMinutes: 75, priceCents: 7000, iconName: "sparkles" },
+  { id: "srv_kids", name: "Corte Infantil", durationMinutes: 45, priceCents: 3500, iconName: "scissors" },
+  { id: "srv_eyebrow", name: "Sobrancelha", durationMinutes: 15, priceCents: 1000, iconName: "palette" },
+  { id: "srv_color", name: "Corte + Pigmentação", durationMinutes: 45, priceCents: 9000, iconName: "palette" },
 ];
 
 export const timeSlots: TimeSlot[] = [

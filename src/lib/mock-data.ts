@@ -17,7 +17,6 @@ export const barbers: Barber[] = [
     photoUrl: "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?auto=format&fit=crop&w=600&q=80",
     rating: 4.98,
     specialties: ["Degrade", "Barba", "Acabamento"],
-    nextAvailable: "Hoje, 17:30",
   },
   {
     id: "barber_luan",
@@ -25,7 +24,6 @@ export const barbers: Barber[] = [
     photoUrl: "https://images.unsplash.com/photo-1622296089863-eb7fc530daa8?auto=format&fit=crop&w=600&q=80",
     rating: 4.92,
     specialties: ["Navalhado", "Pigmentacao"],
-    nextAvailable: "Amanha, 10:00",
   },
 ];
 

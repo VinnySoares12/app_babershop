@@ -41,7 +41,6 @@ export function BarberCard({ barber, selected, onSelect }: BarberCardProps) {
               <Badge key={specialty}>{specialty}</Badge>
             ))}
           </div>
-          <p className="mt-3 text-sm text-muted">Proximo: {barber.nextAvailable}</p>
         </div>
       </div>
     </Card>

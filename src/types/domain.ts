@@ -18,7 +18,6 @@ export type Barber = {
   photoUrl: string;
   rating: number;
   specialties: string[];
-  nextAvailable: string;
 };
 
 export type Service = {

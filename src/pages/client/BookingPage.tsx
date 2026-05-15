@@ -8,17 +8,20 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { appRoutes } from "@/lib/routes";
 import { barbers, services, timeSlots } from "@/lib/mock-data";
-import { useBookingStore } from "@/stores/booking-store";
+import { getBookingSlotId, useBookingStore } from "@/stores/booking-store";
 
 export function BookingPage() {
   const navigate = useNavigate();
-  const { barberId, serviceId, date, time, bookedTimeIds, setField, confirmBooking } = useBookingStore();
+  const { barberId, serviceId, date, time, bookedSlotIds, setField, confirmBooking } = useBookingStore();
   const selectedService = services.find((service) => service.id === serviceId) ?? services[2];
   const canContinue = Boolean(barberId && serviceId && time);
   const couponCents = selectedService.priceCents >= 10000 ? 1000 : 0;
   const cashbackCents = selectedService.priceCents >= 9000 ? 500 : 0;
+  const selectedDate = date ?? "Hoje";
   const availableTimeSlots = timeSlots.map((slot) =>
-    bookedTimeIds.includes(slot.id) ? { ...slot, status: "busy" as const } : slot,
+    barberId && bookedSlotIds.includes(getBookingSlotId({ barberId, date: selectedDate, time: slot.id }))
+      ? { ...slot, status: "busy" as const }
+      : slot,
   );
 
   function handleConfirm() {
@@ -58,7 +61,10 @@ export function BookingPage() {
               key={barber.id}
               barber={barber}
               selected={barber.id === barberId}
-              onSelect={() => setField("barberId", barber.id)}
+              onSelect={() => {
+                setField("barberId", barber.id);
+                setField("time", undefined);
+              }}
             />
           ))}
         </div>

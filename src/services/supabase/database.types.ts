@@ -11,7 +11,11 @@ export type Database = {
           phone: string | null;
           avatar_url: string | null;
           role: "client" | "barber" | "manager" | "admin";
+          asaas_customer_id: string | null;
           default_shop_id: string | null;
+          birthdate: string | null;
+          document: string | null;
+          preferences: Json;
           created_at: string;
           updated_at: string;
         };
@@ -22,9 +26,14 @@ export type Database = {
           phone?: string | null;
           avatar_url?: string | null;
           role?: "client" | "barber" | "manager" | "admin";
+          asaas_customer_id?: string | null;
           default_shop_id?: string | null;
+          birthdate?: string | null;
+          document?: string | null;
+          preferences?: Json;
         };
         Update: Partial<Database["public"]["Tables"]["profiles"]["Insert"]>;
+        Relationships: [];
       };
       appointments: {
         Row: {
@@ -41,6 +50,7 @@ export type Database = {
         };
         Insert: Partial<Database["public"]["Tables"]["appointments"]["Row"]>;
         Update: Partial<Database["public"]["Tables"]["appointments"]["Row"]>;
+        Relationships: [];
       };
       payments: {
         Row: {
@@ -58,6 +68,7 @@ export type Database = {
         };
         Insert: Partial<Database["public"]["Tables"]["payments"]["Row"]>;
         Update: Partial<Database["public"]["Tables"]["payments"]["Row"]>;
+        Relationships: [];
       };
     };
     Views: Record<string, never>;

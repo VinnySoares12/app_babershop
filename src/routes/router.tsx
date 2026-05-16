@@ -12,6 +12,7 @@ import { BookingPage } from "@/pages/client/BookingPage";
 import { ConfirmationPage } from "@/pages/client/ConfirmationPage";
 import { HomePage } from "@/pages/client/HomePage";
 import { PlansPage } from "@/pages/client/PlansPage";
+import { ProfilePage } from "@/pages/client/ProfilePage";
 import { SimpleClientPage } from "@/pages/client/SimpleClientPage";
 import { SplashPage } from "@/pages/client/SplashPage";
 import { appRoutes } from "@/lib/routes";
@@ -69,7 +70,7 @@ export const router = createBrowserRouter([
       { path: "pix-pendente", element: <SimpleClientPage title="Pix pendente" subtitle="Tela preparada para ouvir payments em tempo real ate confirmacao." /> },
       { path: "confirmacao", element: <ConfirmationPage /> },
       { path: "historico", element: <SimpleClientPage title="Histórico" subtitle="Lista de atendimentos, pagamentos e avaliações." /> },
-      { path: "perfil", element: <SimpleClientPage title="Perfil" subtitle="Dados pessoais, preferencias e sessao Supabase." /> },
+      { path: "perfil", element: <ProfilePage /> },
       { path: "planos", element: <PlansPage /> },
       { path: "assinatura", element: <SimpleClientPage title="Assinatura" subtitle="Ciclo ativo, cortes restantes, renovacao e cobrancas." /> },
       { path: "cashback", element: <SimpleClientPage title="Cashback" subtitle="Saldo, extrato e uso no checkout." /> },

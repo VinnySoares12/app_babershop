@@ -47,7 +47,7 @@ export function LoginPage() {
         {formState.errors.password ? <p className="text-sm text-danger">{formState.errors.password.message}</p> : null}
         {authError ? <p className="text-sm text-danger">{authError}</p> : null}
         <Button className="w-full" type="submit" disabled={formState.isSubmitting}>
-          {formState.isSubmitting ? "Entrando..." : "Acessar app"}
+          {formState.isSubmitting ? "Entrando..." : "Acessar"}
         </Button>
       </form>
       <div className="mt-5 flex justify-between text-sm">

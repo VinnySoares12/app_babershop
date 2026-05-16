@@ -1,14 +1,16 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Gift, Sparkles } from "lucide-react";
+import { useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { NextAppointmentCard } from "@/components/cards/NextAppointmentCard";
 import { PlanCard } from "@/components/cards/PlanCard";
 import { ServiceTile } from "@/components/booking/ServiceTile";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { useSubscriptionPlans } from "@/hooks/use-subscription-plans";
 import { useSession } from "@/hooks/use-session";
 import { appRoutes } from "@/lib/routes";
-import { barbers, nextAppointment, plans, services } from "@/lib/mock-data";
+import { barbers, nextAppointment, services } from "@/lib/mock-data";
 import { useBookingStore } from "@/stores/booking-store";
 import { usePlanStore } from "@/stores/plan-store";
 
@@ -26,12 +28,18 @@ function getFirstName(fullName?: string) {
 
 export function HomePage() {
   const { data: session } = useSession();
+  const plansQuery = useSubscriptionPlans();
   const confirmedBooking = useBookingStore((state) => state.confirmedBooking);
   const { selectedPlanId, setSelectedPlanId } = usePlanStore();
+  const plans = useMemo(() => plansQuery.data ?? [], [plansQuery.data]);
   const confirmedBarber = barbers.find((barber) => barber.id === confirmedBooking?.barberId);
   const confirmedService = services.find((service) => service.id === confirmedBooking?.serviceId);
   const customerName = getFirstName(session?.user.user_metadata.full_name);
   const greeting = getGreeting();
+  const selectedPlan = useMemo(
+    () => plans.find((plan) => plan.id === selectedPlanId) ?? plans[0] ?? null,
+    [plans, selectedPlanId],
+  );
   const appointment = confirmedBooking && confirmedBarber && confirmedService
     ? {
         id: "simulated_booking",
@@ -43,6 +51,12 @@ export function HomePage() {
         status: "confirmed" as const,
       }
     : nextAppointment;
+
+  useEffect(() => {
+    if (!selectedPlanId && plans[0]) {
+      setSelectedPlanId(plans[0].id);
+    }
+  }, [plans, selectedPlanId, setSelectedPlanId]);
 
   return (
     <div className="space-y-6">
@@ -103,8 +117,17 @@ export function HomePage() {
           {plans.map((plan) => (
             <PlanCard
               key={plan.id}
-              plan={plan}
-              selected={plan.id === selectedPlanId}
+              plan={{
+                id: plan.id,
+                name: plan.name,
+                tier: plan.tier,
+                priceCents: plan.price_cents,
+                cutsPerMonth: plan.cuts_per_cycle,
+                description: plan.description ?? "",
+                benefits: plan.benefits,
+                highlighted: plan.highlighted,
+              }}
+              selected={plan.id === selectedPlan?.id}
               onSelect={() => setSelectedPlanId(plan.id)}
             />
           ))}

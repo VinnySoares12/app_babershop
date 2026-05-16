@@ -6,6 +6,6 @@ type PlanState = {
 };
 
 export const usePlanStore = create<PlanState>((set) => ({
-  selectedPlanId: "plan_premium",
+  selectedPlanId: "",
   setSelectedPlanId: (planId) => set({ selectedPlanId: planId }),
 }));

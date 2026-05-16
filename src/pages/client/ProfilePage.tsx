@@ -148,7 +148,7 @@ export function ProfilePage() {
   const preferredPaymentMethod = preferences.preferredPaymentMethod ?? "Definir no checkout ou assinatura";
   const createdAt = formatDate(profile?.created_at ?? user?.created_at);
   const updatedAt = formatDate(profile?.updated_at);
-  const { register, handleSubmit, reset, formState } = useForm<ProfileFormValues>({
+  const { register, handleSubmit, reset } = useForm<ProfileFormValues>({
     defaultValues: {
       address: "",
       preferredBarber: "",

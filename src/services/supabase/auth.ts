@@ -4,21 +4,13 @@ export async function signInWithEmail(email: string, password: string) {
   return supabase.auth.signInWithPassword({ email, password });
 }
 
-export async function signUpWithEmail(email: string, password: string, fullName: string) {
+export async function signUpWithEmail(email: string, password: string, fullName: string, phone: string) {
   return supabase.auth.signUp({
     email,
     password,
     options: {
-      data: { full_name: fullName },
-    },
-  });
-}
-
-export async function signInWithGoogle() {
-  return supabase.auth.signInWithOAuth({
-    provider: "google",
-    options: {
-      redirectTo: `${window.location.origin}/app`,
+      data: { full_name: fullName, phone },
+      emailRedirectTo: `${window.location.origin}/auth/login`,
     },
   });
 }
@@ -27,4 +19,8 @@ export async function resetPassword(email: string) {
   return supabase.auth.resetPasswordForEmail(email, {
     redirectTo: `${window.location.origin}/auth/login`,
   });
+}
+
+export async function signOut() {
+  return supabase.auth.signOut();
 }

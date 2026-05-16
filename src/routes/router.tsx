@@ -1,6 +1,7 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import { AuthShell } from "@/components/layout/AuthShell";
 import { PremiumAppShell } from "@/components/layout/PremiumAppShell";
+import { useSession } from "@/hooks/use-session";
 import { ForgotPasswordPage } from "@/pages/auth/ForgotPasswordPage";
 import { LoginPage } from "@/pages/auth/LoginPage";
 import { RegisterPage } from "@/pages/auth/RegisterPage";
@@ -14,6 +15,24 @@ import { PlansPage } from "@/pages/client/PlansPage";
 import { SimpleClientPage } from "@/pages/client/SimpleClientPage";
 import { SplashPage } from "@/pages/client/SplashPage";
 import { appRoutes } from "@/lib/routes";
+
+function ProtectedAppShell() {
+  const session = useSession();
+
+  if (session.isLoading) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-background px-6 text-center text-foreground">
+        <p className="text-sm text-muted">Carregando sua sessão...</p>
+      </main>
+    );
+  }
+
+  if (!session.data) {
+    return <Navigate to={appRoutes.login} replace />;
+  }
+
+  return <PremiumAppShell />;
+}
 
 export const router = createBrowserRouter([
   {
@@ -41,7 +60,7 @@ export const router = createBrowserRouter([
   },
   {
     path: "/app",
-    element: <PremiumAppShell />,
+    element: <ProtectedAppShell />,
     children: [
       { index: true, element: <HomePage /> },
       { path: "agendamento", element: <BookingPage /> },

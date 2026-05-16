@@ -1,9 +1,10 @@
 import { motion } from "framer-motion";
-import { Bell, CalendarDays, Home, Scissors, User } from "lucide-react";
+import { Bell, CalendarDays, Home, LogOut, Scissors, User } from "lucide-react";
 import type { PropsWithChildren } from "react";
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { appRoutes } from "@/lib/routes";
 import { cn } from "@/lib/utils";
+import { signOut } from "@/services/supabase/auth";
 
 const navItems = [
   { to: appRoutes.home, label: "Home", icon: Home },
@@ -14,6 +15,13 @@ const navItems = [
 ];
 
 export function PremiumAppShell({ children }: PropsWithChildren) {
+  const navigate = useNavigate();
+
+  async function handleSignOut() {
+    await signOut();
+    navigate(appRoutes.login, { replace: true });
+  }
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <main className="mx-auto min-h-screen w-full max-w-6xl px-4 pb-28 pt-5 sm:px-6 lg:px-8">
@@ -23,7 +31,7 @@ export function PremiumAppShell({ children }: PropsWithChildren) {
       </main>
 
       <nav className="safe-bottom fixed inset-x-0 bottom-0 z-50 border-t border-border/80 bg-background/88 px-3 pt-3 backdrop-blur-xl">
-        <div className="mx-auto grid max-w-md grid-cols-5 gap-1 rounded-2xl border border-border bg-surface/80 p-1.5 shadow-premium">
+        <div className="mx-auto grid max-w-lg grid-cols-6 gap-1 rounded-2xl border border-border bg-surface/80 p-1.5 shadow-premium">
           {navItems.map((item) => (
             <NavLink
               key={item.to}
@@ -40,6 +48,14 @@ export function PremiumAppShell({ children }: PropsWithChildren) {
               <span>{item.label}</span>
             </NavLink>
           ))}
+          <button
+            type="button"
+            onClick={() => void handleSignOut()}
+            className="flex h-14 flex-col items-center justify-center gap-1 rounded-xl text-[11px] font-medium text-danger transition hover:bg-danger/10"
+          >
+            <LogOut className="h-5 w-5" />
+            <span>Sair</span>
+          </button>
         </div>
       </nav>
     </div>

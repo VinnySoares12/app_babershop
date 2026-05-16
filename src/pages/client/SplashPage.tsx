@@ -10,7 +10,7 @@ export function SplashPage() {
   const [logoFailed, setLogoFailed] = useState(false);
 
   useEffect(() => {
-    const timeout = window.setTimeout(() => navigate(appRoutes.home, { replace: true }), 2400);
+    const timeout = window.setTimeout(() => navigate(appRoutes.login, { replace: true }), 1800);
     return () => window.clearTimeout(timeout);
   }, [navigate]);
 

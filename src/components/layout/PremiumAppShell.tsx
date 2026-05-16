@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Bell, CalendarDays, Home, LogOut, Scissors, User } from "lucide-react";
 import type { PropsWithChildren } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { useUnreadNotificationsCount } from "@/hooks/use-dashboard-data";
 import { appRoutes } from "@/lib/routes";
 import { cn } from "@/lib/utils";
 import { signOut } from "@/services/supabase/auth";
@@ -16,6 +17,8 @@ const navItems = [
 
 export function PremiumAppShell({ children }: PropsWithChildren) {
   const navigate = useNavigate();
+  const unreadNotificationsQuery = useUnreadNotificationsCount();
+  const unreadCount = unreadNotificationsQuery.data ?? 0;
 
   async function handleSignOut() {
     await signOut();
@@ -39,13 +42,18 @@ export function PremiumAppShell({ children }: PropsWithChildren) {
               end={item.to === appRoutes.home}
               className={({ isActive }) =>
                 cn(
-                  "flex h-14 flex-col items-center justify-center gap-1 rounded-xl text-[11px] font-medium text-muted transition",
+                  "relative flex h-14 flex-col items-center justify-center gap-1 rounded-xl text-[11px] font-medium text-muted transition",
                   isActive && "bg-gold/12 text-gold",
                 )
               }
             >
               <item.icon className="h-5 w-5" />
               <span>{item.label}</span>
+              {item.to === appRoutes.notifications && unreadCount > 0 ? (
+                <span className="absolute right-2 top-1.5 min-w-5 rounded-full bg-gold px-1.5 py-0.5 text-center text-[10px] font-bold text-background">
+                  {unreadCount > 9 ? "9+" : unreadCount}
+                </span>
+              ) : null}
             </NavLink>
           ))}
           <button

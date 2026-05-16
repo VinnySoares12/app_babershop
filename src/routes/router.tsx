@@ -11,6 +11,7 @@ import { AppointmentDetailsPage } from "@/pages/client/AppointmentDetailsPage";
 import { BookingPage } from "@/pages/client/BookingPage";
 import { ConfirmationPage } from "@/pages/client/ConfirmationPage";
 import { HomePage } from "@/pages/client/HomePage";
+import { NotificationsPage } from "@/pages/client/NotificationsPage";
 import { PlansPage } from "@/pages/client/PlansPage";
 import { ProfilePage } from "@/pages/client/ProfilePage";
 import { SimpleClientPage } from "@/pages/client/SimpleClientPage";
@@ -75,7 +76,7 @@ export const router = createBrowserRouter([
       { path: "assinatura", element: <SimpleClientPage title="Assinatura" subtitle="Ciclo ativo, cortes restantes, renovacao e cobrancas." /> },
       { path: "cashback", element: <SimpleClientPage title="Cashback" subtitle="Saldo, extrato e uso no checkout." /> },
       { path: "cupons", element: <SimpleClientPage title="Cupons" subtitle="Cupons ativos e validacao antes do pagamento." /> },
-      { path: "notificacoes", element: <SimpleClientPage title="Notificações" subtitle="Lembretes, Pix confirmado e campanhas." /> },
+      { path: "notificacoes", element: <NotificationsPage /> },
     ],
   },
   {

@@ -3,6 +3,25 @@ export type Json = string | number | boolean | null | { [key: string]: Json | un
 export type Database = {
   public: {
     Tables: {
+      services: {
+        Row: {
+          id: string;
+          shop_id: string;
+          name: string;
+          description: string | null;
+          category: string;
+          duration_minutes: number;
+          price_cents: number;
+          icon_name: string | null;
+          is_active: boolean;
+          sort_order: number;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: Partial<Database["public"]["Tables"]["services"]["Row"]>;
+        Update: Partial<Database["public"]["Tables"]["services"]["Row"]>;
+        Relationships: [];
+      };
       plans: {
         Row: {
           id: string;
@@ -81,9 +100,18 @@ export type Database = {
           barber_id: string;
           shop_id: string;
           subscription_id: string | null;
+          coupon_id: string | null;
           starts_at: string;
           ends_at: string;
-          status: string;
+          status:
+            | "draft"
+            | "pending_payment"
+            | "pending"
+            | "confirmed"
+            | "paid"
+            | "completed"
+            | "canceled"
+            | "no_show";
           total_cents: number;
           discount_cents: number;
           cashback_used_cents: number;
@@ -94,6 +122,17 @@ export type Database = {
         };
         Insert: Partial<Database["public"]["Tables"]["appointments"]["Row"]>;
         Update: Partial<Database["public"]["Tables"]["appointments"]["Row"]>;
+        Relationships: [];
+      };
+      appointment_services: {
+        Row: {
+          appointment_id: string;
+          service_id: string;
+          price_cents: number;
+          duration_minutes: number;
+        };
+        Insert: Partial<Database["public"]["Tables"]["appointment_services"]["Row"]>;
+        Update: Partial<Database["public"]["Tables"]["appointment_services"]["Row"]>;
         Relationships: [];
       };
       payments: {
@@ -127,6 +166,50 @@ export type Database = {
         };
         Insert: Partial<Database["public"]["Tables"]["payments"]["Row"]>;
         Update: Partial<Database["public"]["Tables"]["payments"]["Row"]>;
+        Relationships: [];
+      };
+      loyalty_accounts: {
+        Row: {
+          profile_id: string;
+          points: number;
+          cashback_cents: number;
+          vip_level: string;
+          updated_at: string;
+        };
+        Insert: Partial<Database["public"]["Tables"]["loyalty_accounts"]["Row"]>;
+        Update: Partial<Database["public"]["Tables"]["loyalty_accounts"]["Row"]>;
+        Relationships: [];
+      };
+      loyalty_transactions: {
+        Row: {
+          id: string;
+          profile_id: string;
+          appointment_id: string | null;
+          kind: string;
+          points_delta: number;
+          cashback_delta_cents: number;
+          description: string | null;
+          created_at: string;
+        };
+        Insert: Partial<Database["public"]["Tables"]["loyalty_transactions"]["Row"]>;
+        Update: Partial<Database["public"]["Tables"]["loyalty_transactions"]["Row"]>;
+        Relationships: [];
+      };
+      notification_events: {
+        Row: {
+          id: string;
+          profile_id: string | null;
+          shop_id: string | null;
+          title: string;
+          body: string;
+          kind: string;
+          data: Json;
+          read_at: string | null;
+          sent_at: string | null;
+          created_at: string;
+        };
+        Insert: Partial<Database["public"]["Tables"]["notification_events"]["Row"]>;
+        Update: Partial<Database["public"]["Tables"]["notification_events"]["Row"]>;
         Relationships: [];
       };
     };

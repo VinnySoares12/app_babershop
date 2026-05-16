@@ -1,16 +1,19 @@
 import { motion } from "framer-motion";
-import { ArrowRight, Gift, Sparkles } from "lucide-react";
+import { ArrowRight, Bell, Gift, Sparkles } from "lucide-react";
 import { useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { NextAppointmentCard } from "@/components/cards/NextAppointmentCard";
 import { PlanCard } from "@/components/cards/PlanCard";
 import { ServiceTile } from "@/components/booking/ServiceTile";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { useLoyaltySummary, useNotificationsFeed, useRecentHistory } from "@/hooks/use-dashboard-data";
 import { useSubscriptionPlans } from "@/hooks/use-subscription-plans";
 import { useSession } from "@/hooks/use-session";
 import { appRoutes } from "@/lib/routes";
 import { barbers, nextAppointment, services } from "@/lib/mock-data";
+import { formatCurrency } from "@/lib/utils";
 import { useBookingStore } from "@/stores/booking-store";
 import { usePlanStore } from "@/stores/plan-store";
 
@@ -29,6 +32,9 @@ function getFirstName(fullName?: string) {
 export function HomePage() {
   const { data: session } = useSession();
   const plansQuery = useSubscriptionPlans();
+  const loyaltySummaryQuery = useLoyaltySummary();
+  const notificationsQuery = useNotificationsFeed();
+  const recentHistoryQuery = useRecentHistory();
   const confirmedBooking = useBookingStore((state) => state.confirmedBooking);
   const { selectedPlanId, setSelectedPlanId } = usePlanStore();
   const plans = useMemo(() => plansQuery.data ?? [], [plansQuery.data]);
@@ -36,6 +42,9 @@ export function HomePage() {
   const confirmedService = services.find((service) => service.id === confirmedBooking?.serviceId);
   const customerName = getFirstName(session?.user.user_metadata.full_name);
   const greeting = getGreeting();
+  const loyaltySummary = loyaltySummaryQuery.data;
+  const notifications = notificationsQuery.data ?? [];
+  const recentHistory = recentHistoryQuery.data ?? [];
   const selectedPlan = useMemo(
     () => plans.find((plan) => plan.id === selectedPlanId) ?? plans[0] ?? null,
     [plans, selectedPlanId],
@@ -51,6 +60,18 @@ export function HomePage() {
         status: "confirmed" as const,
       }
     : nextAppointment;
+  const fallbackHistory = confirmedBooking && confirmedService
+    ? [{
+        id: "local-confirmed-booking",
+        title: confirmedService.name,
+        subtitle: `Pago em ${confirmedBooking.date}`,
+        amountCents: confirmedBooking.totalCents,
+        statusLabel: "Pago",
+        createdAt: new Date().toISOString(),
+      }]
+    : [];
+  const historyItems = recentHistory.length ? recentHistory : fallbackHistory;
+  const spotlightNotifications = notifications.slice(0, 3);
 
   useEffect(() => {
     if (!selectedPlanId && plans[0]) {
@@ -88,11 +109,47 @@ export function HomePage() {
           </div>
           <div>
             <p className="text-sm font-semibold text-gold">Cashback ativo</p>
-            <h2 className="mt-1 text-xl font-bold">Ganhe 10% no combo desta semana</h2>
-            <p className="mt-2 text-sm text-muted">Use no checkout e acompanhe tudo na carteira.</p>
+            <h2 className="mt-1 text-xl font-bold">
+              {loyaltySummary ? `${formatCurrency(loyaltySummary.cashback_cents)} disponíveis na carteira` : "Ganhe 10% no combo desta semana"}
+            </h2>
+            <p className="mt-2 text-sm text-muted">
+              {loyaltySummary
+                ? `${loyaltySummary.points} pontos acumulados no nível ${loyaltySummary.vip_level}.`
+                : "Use no checkout e acompanhe tudo na carteira."}
+            </p>
           </div>
         </div>
       </Card>
+
+      <section>
+        <div className="mb-3 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <Bell className="h-5 w-5 text-gold" />
+            <h2 className="text-lg font-bold">Avisos ativos</h2>
+          </div>
+          <Link to={appRoutes.notifications} className="text-sm font-semibold text-gold">Ver todos</Link>
+        </div>
+
+        <div className="grid gap-3">
+          {spotlightNotifications.length ? spotlightNotifications.map((item) => (
+            <Card key={item.id} className="flex items-start justify-between gap-4">
+              <div>
+                <div className="flex items-center gap-2">
+                  <p className="font-semibold">{item.title}</p>
+                  <Badge tone={item.read_at ? "muted" : "gold"}>
+                    {item.read_at ? "Lido" : "Novo"}
+                  </Badge>
+                </div>
+                <p className="mt-1 text-sm text-muted">{item.body}</p>
+              </div>
+            </Card>
+          )) : (
+            <Card className="text-sm text-muted">
+              Nenhum aviso ativo no momento. Cashback, Pix confirmado e campanhas aparecem aqui.
+            </Card>
+          )}
+        </div>
+      </section>
 
       <section>
         <div className="mb-3 flex items-center justify-between">
@@ -136,13 +193,24 @@ export function HomePage() {
 
       <section>
         <h2 className="mb-3 text-lg font-bold">Histórico recente</h2>
-        <Card className="flex items-center justify-between">
-          <div>
-            <p className="font-semibold">Corte + Barba</p>
-            <p className="mt-1 text-sm text-muted">Concluído em 10 mai</p>
-          </div>
-          <span className="text-sm font-semibold text-success">Pago</span>
-        </Card>
+        <div className="space-y-3">
+          {historyItems.length ? historyItems.map((item) => (
+            <Card key={item.id} className="flex items-center justify-between gap-4">
+              <div>
+                <p className="font-semibold">{item.title}</p>
+                <p className="mt-1 text-sm text-muted">{item.subtitle}</p>
+              </div>
+              <div className="text-right">
+                <p className="font-semibold">{formatCurrency(item.amountCents)}</p>
+                <span className="text-sm font-semibold text-success">{item.statusLabel}</span>
+              </div>
+            </Card>
+          )) : (
+            <Card className="text-sm text-muted">
+              Assim que um atendimento for pago, ele aparece aqui com o serviço realizado e o valor.
+            </Card>
+          )}
+        </div>
       </section>
     </div>
   );

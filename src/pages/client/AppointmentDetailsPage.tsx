@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { formatBookingDate } from "@/lib/booking";
 import { appRoutes } from "@/lib/routes";
 import { barbers, nextAppointment, services } from "@/lib/mock-data";
 import { formatCurrency } from "@/lib/utils";
@@ -18,10 +19,12 @@ export function AppointmentDetailsPage() {
         barberName: barber.name,
         barberPhoto: barber.photoUrl,
         serviceName: service.name,
-        date: booking.date,
+        date: formatBookingDate(booking.date),
         time: booking.time,
         duration: service.durationMinutes,
         total: booking.totalCents,
+        status: booking.status,
+        paymentMethod: booking.paymentMethod,
       }
     : {
         barberName: nextAppointment.barberName,
@@ -31,7 +34,12 @@ export function AppointmentDetailsPage() {
         time: nextAppointment.timeLabel,
         duration: 75,
         total: 9500,
+        status: "confirmed" as const,
+        paymentMethod: undefined,
       };
+
+  const badgeTone = detail.status === "pending_payment" ? "gold" : "success";
+  const badgeLabel = detail.status === "pending_payment" ? "Pagamento pendente" : "Confirmado";
 
   return (
     <div className="space-y-6">
@@ -44,7 +52,7 @@ export function AppointmentDetailsPage() {
         <div className="flex items-start gap-4">
           <img src={detail.barberPhoto} alt={detail.barberName} className="h-24 w-24 rounded-2xl object-cover" />
           <div className="min-w-0 flex-1">
-            <Badge tone="success">Confirmado</Badge>
+            <Badge tone={badgeTone}>{badgeLabel}</Badge>
             <h2 className="mt-3 text-xl font-bold">{detail.serviceName}</h2>
             <p className="mt-1 text-sm text-muted">Com {detail.barberName}</p>
             <p className="mt-2 flex items-center gap-1 text-sm text-gold">
@@ -61,14 +69,20 @@ export function AppointmentDetailsPage() {
         </div>
 
         <div className="mt-6 flex items-center justify-between rounded-2xl border border-border bg-background/60 p-4">
-          <span className="text-sm text-muted">Total pago</span>
+          <span className="text-sm text-muted">{detail.status === "pending_payment" ? "Total a pagar" : "Total pago"}</span>
           <strong className="text-xl text-gold">{formatCurrency(detail.total)}</strong>
         </div>
       </Card>
 
-      <Button asChild className="h-14 w-full">
-        <Link to={appRoutes.booking}>Reagendar simulação</Link>
-      </Button>
+      {detail.status === "pending_payment" ? (
+        <Button asChild className="h-14 w-full">
+          <Link to={appRoutes.checkout}>Ir para pagamento</Link>
+        </Button>
+      ) : (
+        <Button asChild className="h-14 w-full">
+          <Link to={appRoutes.booking}>Reagendar simulação</Link>
+        </Button>
+      )}
     </div>
   );
 }

@@ -11,12 +11,22 @@ const statusClasses = {
 export function TimeSlotGrid({
   slots,
   selectedSlotId,
+  emptyMessage = "Nenhum horario encontrado.",
   onSelect,
 }: {
   slots: TimeSlot[];
   selectedSlotId?: string;
+  emptyMessage?: string;
   onSelect?: (slot: TimeSlot) => void;
 }) {
+  if (!slots.length) {
+    return (
+      <div className="rounded-2xl border border-dashed border-border bg-background/40 px-4 py-6 text-sm text-muted">
+        {emptyMessage}
+      </div>
+    );
+  }
+
   return (
     <div className="grid grid-cols-3 gap-3 sm:grid-cols-4">
       {slots.map((slot) => {

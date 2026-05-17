@@ -7,12 +7,21 @@ import { appRoutes } from "@/lib/routes";
 import type { Appointment } from "@/types/domain";
 
 export function NextAppointmentCard({ appointment }: { appointment: Appointment }) {
+  const statusMap = {
+    pending_payment: { label: "Pagamento pendente", tone: "gold" as const },
+    confirmed: { label: "Confirmado", tone: "success" as const },
+    paid: { label: "Pago", tone: "success" as const },
+    completed: { label: "Concluido", tone: "muted" as const },
+    canceled: { label: "Cancelado", tone: "muted" as const },
+  };
+  const status = statusMap[appointment.status];
+
   return (
     <Card className="relative overflow-hidden border-gold/20 bg-[linear-gradient(135deg,rgba(200,164,93,0.16),rgba(20,23,28,0.92)_42%)]">
       <div className="absolute right-0 top-0 h-32 w-32 rounded-full bg-gold/10 blur-3xl" />
       <div className="relative flex items-start justify-between gap-4">
         <div>
-          <Badge tone="success">Confirmado</Badge>
+          <Badge tone={status.tone}>{status.label}</Badge>
           <h2 className="mt-4 text-xl font-bold">Seu próximo horário</h2>
           <p className="mt-1 text-sm text-muted">{appointment.serviceName} com {appointment.barberName}</p>
         </div>

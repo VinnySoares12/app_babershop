@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
-import { ArrowRight, Bell, Gift, Sparkles } from "lucide-react";
+import { ArrowRight, Bell, Gift, Sparkles, UserRound } from "lucide-react";
 import { useEffect, useMemo } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { NextAppointmentCard } from "@/components/cards/NextAppointmentCard";
 import { PlanCard } from "@/components/cards/PlanCard";
 import { ServiceTile } from "@/components/booking/ServiceTile";
@@ -11,6 +11,7 @@ import { Card } from "@/components/ui/card";
 import { useLoyaltySummary, useNotificationsFeed, useRecentHistory } from "@/hooks/use-dashboard-data";
 import { useSubscriptionPlans } from "@/hooks/use-subscription-plans";
 import { useSession } from "@/hooks/use-session";
+import { formatBookingDate } from "@/lib/booking";
 import { appRoutes } from "@/lib/routes";
 import { barbers, nextAppointment, services } from "@/lib/mock-data";
 import { formatCurrency } from "@/lib/utils";
@@ -30,6 +31,7 @@ function getFirstName(fullName?: string) {
 }
 
 export function HomePage() {
+  const navigate = useNavigate();
   const { data: session } = useSession();
   const plansQuery = useSubscriptionPlans();
   const loyaltySummaryQuery = useLoyaltySummary();
@@ -55,22 +57,12 @@ export function HomePage() {
         barberName: confirmedBarber.name,
         barberPhoto: confirmedBarber.photoUrl,
         serviceName: confirmedService.name,
-        dateLabel: confirmedBooking.date,
+        dateLabel: formatBookingDate(confirmedBooking.date),
         timeLabel: confirmedBooking.time,
-        status: "confirmed" as const,
+        status: confirmedBooking.status,
       }
     : nextAppointment;
-  const fallbackHistory = confirmedBooking && confirmedService
-    ? [{
-        id: "local-confirmed-booking",
-        title: confirmedService.name,
-        subtitle: `Pago em ${confirmedBooking.date}`,
-        amountCents: confirmedBooking.totalCents,
-        statusLabel: "Pago",
-        createdAt: new Date().toISOString(),
-      }]
-    : [];
-  const historyItems = recentHistory.length ? recentHistory : fallbackHistory;
+  const historyItems = recentHistory;
   const spotlightNotifications = notifications.slice(0, 3);
 
   useEffect(() => {
@@ -87,11 +79,13 @@ export function HomePage() {
           <h1 className="mt-2 text-3xl font-bold tracking-normal sm:text-4xl">{greeting}, {customerName}</h1>
           <p className="mt-2 text-sm text-muted">Seu visual premium em poucos toques.</p>
         </div>
-        <img
-          src="/assets/saviella-logo.png"
-          alt="Saviella The Barber"
-          className="h-12 w-12 rounded-full object-cover ring-1 ring-gold/30"
-        />
+        <Link
+          to={appRoutes.profile}
+          className="flex h-14 w-14 items-center justify-center rounded-full border border-gold/30 bg-gold/10 text-gold transition hover:bg-gold hover:text-background"
+          aria-label="Abrir perfil"
+        >
+          <UserRound className="h-6 w-6" />
+        </Link>
       </header>
 
       <NextAppointmentCard appointment={appointment} />
@@ -159,7 +153,13 @@ export function HomePage() {
         <div className="grid gap-3 sm:grid-cols-2">
           {services.slice(0, 6).map((service, index) => (
             <motion.div key={service.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.04 }}>
-              <ServiceTile service={service} />
+              <ServiceTile
+                service={service}
+                onSelect={() => {
+                  useBookingStore.getState().setField("serviceId", service.id);
+                  navigate(appRoutes.booking);
+                }}
+              />
             </motion.div>
           ))}
         </div>
@@ -207,7 +207,7 @@ export function HomePage() {
             </Card>
           )) : (
             <Card className="text-sm text-muted">
-              Assim que um atendimento for pago, ele aparece aqui com o serviço realizado e o valor.
+              Assim que um pagamento real for confirmado, ele aparece aqui com o serviço realizado e o valor.
             </Card>
           )}
         </div>

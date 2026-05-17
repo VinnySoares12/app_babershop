@@ -2,13 +2,15 @@ import { CheckCircle2, ReceiptText } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { formatBookingDate } from "@/lib/booking";
 import { appRoutes } from "@/lib/routes";
-import { barbers, services } from "@/lib/mock-data";
+import { barbers, defaultBookingDate, services } from "@/lib/mock-data";
 import { formatCurrency } from "@/lib/utils";
 import { useBookingStore } from "@/stores/booking-store";
 
 export function ConfirmationPage() {
   const booking = useBookingStore((state) => state.confirmedBooking);
+  const paymentMethod = useBookingStore((state) => state.paymentMethod);
   const barber = barbers.find((item) => item.id === booking?.barberId);
   const service = services.find((item) => item.id === booking?.serviceId);
 
@@ -18,8 +20,8 @@ export function ConfirmationPage() {
         <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-success/10 text-success">
           <CheckCircle2 className="h-9 w-9" />
         </div>
-        <h1 className="mt-5 text-3xl font-bold">Agendamento confirmado</h1>
-        <p className="mt-2 text-sm text-muted">Simulação concluída. Depois conectamos isso ao Supabase e ao pagamento real.</p>
+        <h1 className="mt-5 text-3xl font-bold">Pagamento concluído</h1>
+        <p className="mt-2 text-sm text-muted">Agendamento confirmado depois do checkout separado. Depois conectamos ao pagamento real.</p>
       </Card>
 
       <Card>
@@ -30,9 +32,9 @@ export function ConfirmationPage() {
         <div className="mt-5 space-y-3 text-sm">
           <Line label="Barbeiro" value={barber?.name ?? "Rafael Saviella"} />
           <Line label="Serviço" value={service?.name ?? "Corte + Barba"} />
-          <Line label="Data" value={booking?.date ?? "Hoje"} />
+          <Line label="Data" value={booking?.date ? formatBookingDate(booking.date) : formatBookingDate(defaultBookingDate)} />
           <Line label="Horário" value={booking?.time ?? "18:30"} />
-          <Line label="Pagamento" value="Pix simulado" />
+          <Line label="Pagamento" value={paymentMethod === "card" ? "Cartao simulado" : "Pix simulado"} />
           <Line label="Total" value={formatCurrency(booking?.totalCents ?? 9500)} strong />
         </div>
       </Card>

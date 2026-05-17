@@ -1,4 +1,5 @@
-import type { Appointment, Barber, Plan, Service, TimeSlot } from "@/types/domain";
+import { getTodayDateKey } from "@/lib/booking";
+import type { Appointment, Barber, Plan, Service } from "@/types/domain";
 
 export const nextAppointment: Appointment = {
   id: "apt_01",
@@ -36,31 +37,7 @@ export const services: Service[] = [
   { id: "srv_color", name: "Corte + Pigmentação", durationMinutes: 45, priceCents: 9000, iconName: "palette" },
 ];
 
-export const timeSlots: TimeSlot[] = [
-  { id: "09:00", label: "09:00", status: "available" },
-  { id: "09:30", label: "09:30", status: "available" },
-  { id: "10:00", label: "10:00", status: "available" },
-  { id: "10:30", label: "10:30", status: "available" },
-  { id: "11:00", label: "11:00", status: "available" },
-  { id: "11:30", label: "11:30", status: "available" },
-  { id: "12:00", label: "12:00", status: "available" },
-  { id: "12:30", label: "12:30", status: "available" },
-  { id: "13:00", label: "13:00", status: "available" },
-  { id: "13:30", label: "13:30", status: "available" },
-  { id: "14:00", label: "14:00", status: "available" },
-  { id: "14:30", label: "14:30", status: "available" },
-  { id: "15:00", label: "15:00", status: "available" },
-  { id: "15:30", label: "15:30", status: "available" },
-  { id: "16:00", label: "16:00", status: "available" },
-  { id: "16:30", label: "16:30", status: "available" },
-  { id: "17:00", label: "17:00", status: "available" },
-  { id: "17:30", label: "17:30", status: "available" },
-  { id: "18:00", label: "18:00", status: "available" },
-  { id: "18:30", label: "18:30", status: "available" },
-  { id: "19:00", label: "19:00", status: "available" },
-  { id: "19:30", label: "19:30", status: "available" },
-  { id: "20:00", label: "20:00", status: "available" },
-];
+export const defaultBookingDate = getTodayDateKey();
 
 export const plans: Plan[] = [
   {

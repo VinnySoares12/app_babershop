@@ -10,6 +10,7 @@ import { SimpleAdminPage } from "@/pages/admin/SimpleAdminPage";
 import { AppointmentDetailsPage } from "@/pages/client/AppointmentDetailsPage";
 import { BookingPage } from "@/pages/client/BookingPage";
 import { ConfirmationPage } from "@/pages/client/ConfirmationPage";
+import { CheckoutPage } from "@/pages/client/CheckoutPage";
 import { HomePage } from "@/pages/client/HomePage";
 import { NotificationsPage } from "@/pages/client/NotificationsPage";
 import { PlansPage } from "@/pages/client/PlansPage";
@@ -67,7 +68,7 @@ export const router = createBrowserRouter([
       { index: true, element: <HomePage /> },
       { path: "agendamento", element: <BookingPage /> },
       { path: "agendamento/detalhes", element: <AppointmentDetailsPage /> },
-      { path: "checkout", element: <SimpleClientPage title="Checkout" subtitle="Pagamento seguro por Pix, cartão ou assinatura via Edge Functions." /> },
+      { path: "checkout", element: <CheckoutPage /> },
       { path: "pix-pendente", element: <SimpleClientPage title="Pix pendente" subtitle="Tela preparada para ouvir payments em tempo real ate confirmacao." /> },
       { path: "confirmacao", element: <ConfirmationPage /> },
       { path: "historico", element: <SimpleClientPage title="Histórico" subtitle="Lista de atendimentos, pagamentos e avaliações." /> },

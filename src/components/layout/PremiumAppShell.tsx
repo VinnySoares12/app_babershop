@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Bell, CalendarDays, Home, LogOut, Scissors, User } from "lucide-react";
+import { Bell, CalendarDays, CreditCard, Home, LogOut, Scissors } from "lucide-react";
 import type { PropsWithChildren } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useUnreadNotificationsCount } from "@/hooks/use-dashboard-data";
@@ -10,9 +10,9 @@ import { signOut } from "@/services/supabase/auth";
 const navItems = [
   { to: appRoutes.home, label: "Home", icon: Home },
   { to: appRoutes.booking, label: "Agenda", icon: CalendarDays },
+  { to: appRoutes.checkout, label: "Pagamento", icon: CreditCard },
   { to: appRoutes.plans, label: "Planos", icon: Scissors },
   { to: appRoutes.notifications, label: "Avisos", icon: Bell },
-  { to: appRoutes.profile, label: "Perfil", icon: User },
 ];
 
 export function PremiumAppShell({ children }: PropsWithChildren) {
